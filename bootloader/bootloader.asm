@@ -3,59 +3,26 @@
 org 0x7c00
 bits 16
 
-section .data
-  msg db "Hello, World!", 0ah, 0dh, 0h
+mov ax, 0x07E0      ; 07E0h = (07C00h+200h)/10h, beginning of stack segment
+mov ss, ax
+mov sp, 0x2000      ; 8k of stack space
+; end of stack segment 0x07E0:0x2000=0x09E00
 
-section .text
-  global boot
+jmp boot
 
-  ;--------------------------
-  ; Routine: MovCursor
-  ; Purpose: Moves the cursor to a specific location on the screen
-  ; Parameters:
-  ;          BH = Y coordinate (row)
-  ;          BL = X coordinate (column)
-  ; Return: None
-  ;--------------------------
-  MovCursor:
-    mov AH, 0x02
-    mov DH, BH ; row
-    mov DL, BL ; column
-    mov BH, 0x00 ; page number
-    int 0x10
-    ret
+%include "io.asm"
 
-  ;--------------------------
-  ; Routine: PutChar
-  ; Purpose: Prints a character at the current cursor location
-  ; Parameters:
-  ;         AL = character
-  ;         BL = color
-  ;         CX = number of time to print the character
-  ; Return: None
-  ;--------------------------
-  PutChar:
-    mov AH, 0x09 ; 
-    mov BH, 0x00 ; page number
-    int 0x10
-    ret
+msg db "Hello, World!", 0
 
+boot: 
+  cli ; disable interrupts
+  cld
+  mov si, msg
+  call Print
 
-  boot: 
-    cli ; disable interrupts
-    cld
-    hlt ; halt the system
+  hlt ; halt the system
 
-    mov BH, 0x01
-    mov BL, 0x07
-    call MovCursor
-    mov AL, "H"
-    mov BL, 0x07
-    mov CX, 1
-    call PutChar
+; clear the first 512 bytes of memory
 
-
-  ; clear the first 512 bytes of memory
-
-  times 510-($-$$) db 0
-  dw 0xAA55
+times 510-($-$$) db 0
+dw 0xAA55

@@ -9,8 +9,6 @@
 
 MovCursor:
   mov AH, 0x02
-  mov DH, BH ; row
-  mov DL, BL ; column
   mov BH, 0x00 ; page number
   int 0x10
   ret
@@ -21,11 +19,10 @@ MovCursor:
 ; Parameters:
 ;         AL = character
 ;         BL = color
-;         CX = number of time to print the character
 ; Return: None
 ;--------------------------
 PutChar:
-  mov AH, 0x09 ; 
+  mov AH, 0x0E ; 
   mov BH, 0x00 ; page number
   int 0x10
   ret
@@ -38,6 +35,13 @@ PutChar:
 ; Return: None
 ;--------------------------
 Print:
-  
+  mov BL, 0x07
+  mov CX, 1
+.loop:
+  lodsb
+  cmp AL, 0
+  je .return
+  call PutChar
+  jmp .loop
+.return:
   ret
-
