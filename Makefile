@@ -1,7 +1,7 @@
 BUILD_DIR=build
 BOOTLOADER=$(BUILD_DIR)/bootloader/bootloader.o
 OS=$(BUILD_DIR)/os/kernel.o
-DISK_IMG=disk.img
+DISK_IMG=$(BUILD_DIR)/disk.img
 
 all: package
 

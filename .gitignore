@@ -1,0 +1,3 @@
+build/bootloader/*
+build/os/*
+build/*.img

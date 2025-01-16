@@ -4,7 +4,7 @@ org 0x7c00
 bits 16
 
 ; set up the data segment
-mov ax, 0x07C0 ;;todo this might be wrong
+mov ax, 0x0000
 mov ds, ax
 ; set up the stack
 mov ax, 0x07E0
