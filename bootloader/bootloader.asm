@@ -3,10 +3,16 @@
 org 0x7c00
 bits 16
 
-mov ax, 0x07E0      ; 07E0h = (07C00h+200h)/10h, beginning of stack segment
+; set up the data segment
+mov ax, 0x07C0 ;;todo this might be wrong
+mov ds, ax
+; set up the stack
+mov ax, 0x07E0
 mov ss, ax
-mov sp, 0x2000      ; 8k of stack space
-; end of stack segment 0x07E0:0x2000=0x09E00
+mov sp, 0x2000
+; set up the extra segment to load the kernel
+mov ax, 0x1000
+mov es, ax
 
 jmp boot
 

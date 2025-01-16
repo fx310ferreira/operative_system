@@ -1,11 +1,12 @@
-all: build package
+BUILD_DIR=../build/bootloader
 
-build: bootloader.asm
-	nasm -f bin bootloader.asm -o bootloader
+BOOTLOADER_SRCS := $(wildcard *.asm)
+BOOTLOADER_OBJS := $(patsubst %.asm, %.o, $(BOOTLOADER_SRCS))
 
-package: bootloader
-	dd if=/dev/zero of=disk.img bs=512 count=2880
-	dd conv=notrunc if=bootloader of=disk.img bs=512 count=1 seek=0
+all: $(BOOTLOADER_OBJS)
 
-run: disk.img
-	qemu-system-i386 -machine q35 -fda disk.img -gdb tcp::26000 -S
+$(BUILD_DIR)/%.o: %.asm
+	nasm -f bin $< -o $@
+
+clean:
+	rm $(BUILD_DIR)/*
