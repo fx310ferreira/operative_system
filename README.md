@@ -5,14 +5,14 @@
 
 ### Todos
 1. [Bootloader](./bootloader/)
-   - [ ] Set up all the segments
+   - [x] Set up all the segments
       - [x] set up Stack Segment (SS)
       - [x] set up Extra Segment (ES)
-      - [ ] set up Data Segment (DS)
+      - [x] set up Data Segment (DS)
    - [x] Basic print
    - [ ] Read and load the Kernel
-      - [ ] Where in memory should I load it, does it matter? Yes, 0x010000, move this address into ES
-      - [ ] Where can I find the Kernel?
+      - [x] Where in memory should I load it, does it matter? Yes, 0x010000, move this address into ES
+      - [x] Where can I find the Kernel?
       - [ ] Change to 32 bit protected mode
 2. Kernel
 
@@ -21,3 +21,4 @@
 - [x] Rework makefiles
 - [ ] Obsidian stuff
 - [ ] GCC Cross Compiler missing
+- [ ] understand gdb behavior on int calls

@@ -6,7 +6,6 @@
 ;          BL = X coordinate (column)
 ; Return: None
 ;--------------------------
-
 MovCursor:
   mov AH, 0x02
   mov BH, 0x00 ; page number
