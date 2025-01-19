@@ -3,6 +3,9 @@
 org 0x7c00
 bits 16
 
+%define  LOAD_ADDRESS 10000h
+%define  LOAD_SEGMENT 1000h
+
 ; set up the data segment
 mov ax, 0x0000
 mov ds, ax
@@ -11,7 +14,7 @@ mov ax, 0x07E0
 mov ss, ax
 mov sp, 0x2000
 ; set up the extra segment to load the kernel
-mov ax, 0x1000
+mov ax, LOAD_SEGMENT
 mov es, ax
 
 jmp boot
@@ -28,12 +31,15 @@ boot:
   call Print
 
   ; load the kernel
-  mov ax, 0x50  
-  mov es, ax
   xor bx, bx
-  mov al, 2 ; load 2 sectors
+  mov al, 17 ; load 17 sectors
   call DiskLoad
-  jmp 0x50:0x0 ; jump to the kernel
+
+  ; Load the 32 bit addres to jump to 
+  mov si, 0x18
+  mov eax, dword [es:si]
+  jmp eax
+
 
   hlt ; halt the system
 
