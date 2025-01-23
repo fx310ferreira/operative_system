@@ -1,10 +1,10 @@
 ; simple bootloader
 ; *************
-org 0x7c00
-bits 16
+[org 0x7c00]
+[bits 16]
 
-%define  LOAD_ADDRESS 10000h
-%define  LOAD_SEGMENT 1000h
+LOAD_ADDRESS equ 10000h
+LOAD_SEGMENT equ 1000h
 
 ; set up the data segment
 mov ax, 0x0000
@@ -21,6 +21,7 @@ jmp boot
 
 %include "io.asm"
 %include "diskload.asm"
+%include "gdt.asm"
 
 msg db "Loading Kernel", 0
 
@@ -30,18 +31,26 @@ boot:
   mov si, msg
   call Print
 
-  ; load the kernel
+  ;load the kernel
   xor bx, bx
   mov al, 17 ; load 17 sectors
-  call DiskLoad
+  call LoadKernel
 
-  ; Load the 32 bit addres to jump to 
+  ; activae the protected mode
+	cli
+	lgdt[gdt_descriptor]
+	mov eax, cr0
+	or al, 0x01
+	mov cr0, eax
+	jmp CODE_SEG:startPM
+
+[bits 32]
+startPM:
   mov si, 0x18
   mov eax, dword [es:si]
-  jmp eax
+  call eax
 
-
-  hlt ; halt the system
+  jmp $
 
 ; clear the first 512 bytes of memory
 times 510-($-$$) db 0
